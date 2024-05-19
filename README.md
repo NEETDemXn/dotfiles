@@ -5,7 +5,7 @@ It should have everything needed to go from the live install, to a GUI Desktop E
 
 ## Includes:
 - **i3**: Window Manager
-- **Brave**: web-browser
+- **Brave**: Web Browser
 - **kiTTY**: Terminal Emulator
 - **Pipewire**: Audio Framework
 - **Nautilus**: File Manager
@@ -65,4 +65,5 @@ systemctl enable lightdm
 should equal the size of the RAM.
 
 Date: *05-19-2024*
-- For some reason, the installer uses the graphics card now (???) I could be wrong, but appending the `nomodeselect` parameter (by pressing the `e` key) before running the live installation will work.
+- For some reason, running the installer causes a blackscreen. Appending the `nomodeselect` parameter (by pressing the `e` key & typing `nomodeselect` at the end of the line)
+before running the live installation will get it to work.
