@@ -44,7 +44,7 @@ CITY='Los_Angeles'
 LANG='en_US.UTF-8'
 USERNAME='NEET'
 HOSTNAME='BLACKBOX'
-EFI_PARTITION='nvme0np1'
+EFI_PARTITION='nvme0n1p1'
 
 ###!!! DO NOT CHANGE BELOW VARIABLE(s) !!!###
 LINE=$(grep -n $LANG /etc/locale.gen | cut -d: -f1)
@@ -80,9 +80,6 @@ pacman -S sudo grub efibootmgr dosfstools os-prober mtools networkmanager --noco
 ln -sf /usr/share/zoneinfo/$REGION/$CITY/etc/localtime
 hwclock --systohc
 
-# Sync system clock with time zone (this wasn't stated in the install guide but I figured I would put this here anyways)
-timedatectl set-ntp  true
-
 ## Set localization (Section 3.4) ##
 # Get line of $LANG and remove comment indicator from /etc/locale.gen then create and set locale
 sed -i $LINE's/^.//' /etc/locale.gen
@@ -112,8 +109,8 @@ echo "127.0.1.1		$HOSTNAME" >> /etc/hosts
 useradd -m $USERNAME
 
 # Edit /etc/sudoers to allow the %wheel group to have sudo permissions so we can make Admin user.
-# Find which line the wheel group with no password is on and remove the comment indicator
-sed -i $(grep -n '%wheel ALL(ALL:ALL) = NOPASSWD: ALL' /etc/sudoers | cut -d: -f1)'s/^.//' \
+# Find which line the wheel group (including password) is on and remove the comment indicator
+sed -i $(grep -n '%wheel ALL=(ALL:ALL) ALL' /etc/sudoers | cut -d: -f1)'s/^.//' \
 	/etc/sudoers
 
 # Append $USERNAME to wheel group
@@ -147,7 +144,7 @@ pacman -S xorg-server xorg-xinit lightdm lightdm-gtk-greeter lightdm-gtk-greeter
 	i3status i3lock dmenu --noconfirm
 
 ## Install packages ##
-pacman -S neovim gcc kitty brave nautilus openssh --noconfirm
+pacman -S gcc kitty firefox nautilus openssh --noconfirm
 
 # Audio
 pacman -S pipewire pipewire-audio pipewire-pulse wireplumber pavucontrol --noconfirm
@@ -184,6 +181,7 @@ pacman -S linux-surface-secureboot-mok --noconfirm
 grub-mkconfig -o /boot/grub/grub.cfg
 
 # ALL DONE!!!
+clear
 echo 'You are almost done! You can now exit the chroot environment and restart your system.'
 echo "Log into your newly made user account $USERNAME, and enable the required system services using the \`systemctl\` command."
 echo 'Just in case, I left them in the README.md file within this repo, under the "Post Installation" section.'
