@@ -77,7 +77,7 @@ pacman -Syyu --noconfirm
 pacman -S sudo grub efibootmgr dosfstools os-prober mtools networkmanager --noconfirm
 
 ## Set the time zone (Section 3.3) ##
-ln -sf /usr/share/zoneinfo/$REGION/$CITY/etc/localtime
+ln -sf /usr/share/zoneinfo/$REGION/$CITY /etc/localtime
 hwclock --systohc
 
 ## Set localization (Section 3.4) ##
