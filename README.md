@@ -11,6 +11,17 @@ It should have everything needed to go from the live install, to a GUI Desktop E
 - **Nautilus**: File Manager
 - **gcc**: GNU C Compiler
 - **NeoVim**: Terminal Text Editor
+- **mpv**: Simple media player
+- **picom**: A compositor for Xorg (make windows transparent, have drop shadow, or rounded corners)
+- **zig**: The Zig Programming Language
+
+### Etc.
+#### aur.sh
+- **Brave**: The Brave web browser.
+- **xwinwrap**: mmhobi7's fork of `xwinwrap`. Used for setting videos as a wallpaper in this X11 WM.
+
+#### other_packages.sh
+- **Bun.js**: A JavaScript/TypeScript runtime written in Zig. Comes with TypeScript out of the box.
 
 ## How to Use:
 

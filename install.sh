@@ -17,7 +17,7 @@
 # ██║██║ ╚████║   ██║   ██║  ██║╚██████╔╝╚═╝
 # ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝    
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# This repo is for quick customization, reproducibility, and notes/reminders for installing Arch Linux for the Microsoft Surface Laptop 3
+# This repo is for quick customization, reproducibility, and notes/reminders for installing Arch Linux on the Microsoft Surface Laptop 3.
 # From installation, to post installation, it should have everything needed to go from the install screen, to a GUI Desktop Environment that looks good.
 
 # ██╗  ██╗ ██████╗ ██╗    ██╗    ████████╗ ██████╗     ██╗   ██╗███████╗███████╗   
@@ -55,22 +55,15 @@ LINE=$(grep -n $LANG /etc/locale.gen | cut -d: -f1)
 #######################
 # Installation Set Up #
 #######################
-
-######################################### !!! IMPORTANT !!! ##############################################
-# OPTIONAL: You might need this here just in case you are running an older Arch Linux live installation. #
-# You might not be able to progress otherwise...							 #
-##########################################################################################################
-
-## BEGIN OPTIONAL ##
 # Refresh Arch Linux package manager repository and metadata
 pacman -Syy
 
-# Install latest Arch Linux KeyRing to avoid PGP Errors. Good to use if you're installing from an older Arch Linx live installation
+# Install latest Arch Linux KeyRing to avoid PGP Errors. Good to use if you're installing from an older Arch Linux live installation
 pacman -S archlinux-keyring --noconfirm
 
 # Refresh and update all packages
 pacman -Syyu --noconfirm
-## END OPTIONAL ##
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 # Required packages to finish insallation
@@ -118,11 +111,11 @@ usermod -aG wheel $USERNAME
 
 # Set Passwords
 clear
-echo [ EDIT PASSWORD FOR \'root\' USER \(will not be echoed to the terminal\) ]
+echo [ SET PASSWORD FOR \'root\' USER \(will not be echoed to the terminal\) ]
 passwd
 
 clear
-echo [ EDIT PASSWORD FOR \(\'$USERNAME\'\) USER \(will not be echoed to the terminal\) ]
+echo [ SET PASSWORD FOR \(\'$USERNAME\'\) USER \(will not be echoed to the terminal\) ]
 passwd $USERNAME
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -144,7 +137,8 @@ pacman -S xorg-server xorg-xinit lightdm lightdm-gtk-greeter lightdm-gtk-greeter
 	i3status i3lock dmenu --noconfirm
 
 ## Install packages ##
-pacman -S gcc kitty firefox nautilus openssh --noconfirm
+# `ripgrep` is a dependency for neovim settings to grep through files while editing
+pacman -S git discord polybar picom gcc kitty firefox nautilus openssh zig mpv ripgrep --noconfirm
 
 # Audio
 pacman -S pipewire pipewire-audio pipewire-pulse wireplumber pavucontrol --noconfirm
@@ -170,8 +164,10 @@ echo 'Server = https://pkg.surfacelinux.com/arch' >> /etc/pacman.conf
 pacman -Syyu
 pacman -S linux-surface linux-surface-headers iptsd --noconfirm
 
-# !!OPTIONAL!! Additional Wifi Firmware for: Surface Pro 4, 5, & 6, Book 1 & 2, Laptop 1 & 2
-#pacman -S linux-firmware-marvell
+# !!OPTIONAL (feel free to skip this part)!! 
+# Additional Wifi Firmware for: Surface Pro 4, 5, & 6, Book 1 & 2, Laptop 1 & 2
+#
+# pacman -S linux-firmware-marvell
 
 # Secureboot Key. Will sign the Linux-Surface kernel into the bootloader.
 # Has to be installed on it's own since it comes with instructions
@@ -179,6 +175,39 @@ pacman -S linux-surface-secureboot-mok --noconfirm
 
 # Configure GRUB to use Linux-Surface kernel
 grub-mkconfig -o /boot/grub/grub.cfg
+
+# Fonts
+sudo mkdir /usr/local/share/fonts
+sudo mkdir/usr/local/share/fonts/otf
+sudo mkdir/usr/local/share/fonts/ttf
+
+sudo cp -r ./fonts/EnvyCodeRNerdFont/ /usr/local/share/fonts/ttf/
+sudo cp -r ./fonts/GeistMono/ /usr/local/share/fonts/otf/
+sudo cp -r ./fonts/Lekton/ /usr/local/share/fonts/ttf/
+
+fc-cache
+
+# Move .config folder to NEET home dir
+cp -r .config/ /home/NEET/
+
+# Install AUR packages
+cd /home/$USERNAME/
+mkdir Installations && cd Installations
+
+echo 'Cloning and installing Brave Web Browser...'
+git clone https://aur.archlinux.org/brave-bin.git
+cd brave-bin
+su -c 'makepkg -si --noconfirm' $USERNAME
+
+cd /home/$USERNAME/Installations
+
+echo 'Cloning and installing xwinwrap'
+git clone https://aur.archlinux.org/xwinwrap-mmhobi7-git.git
+cd xwinwrap-mmhobi7-git
+su -c 'makepkg -si --noconfirm' $USERNAME
+
+# Bun.js Installation
+su -c 'curl -fsSL https://bun.sh/install | bash' $USERNAME
 
 # ALL DONE!!!
 clear
